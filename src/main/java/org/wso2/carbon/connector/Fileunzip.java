@@ -32,52 +32,48 @@ import org.wso2.carbon.connector.core.Connector;
 import org.wso2.carbon.connector.util.FileUnzipUtil;
 import org.wso2.carbon.connector.util.ResultPayloadCreater;
 
-
 public class Fileunzip extends AbstractConnector implements Connector {
 
-    private static Log log = LogFactory.getLog(Fileunzip.class);
+	private static Log log = LogFactory.getLog(Fileunzip.class);
 
-    public void connect(MessageContext messageContext) throws ConnectException {
+	public void connect(MessageContext messageContext) throws ConnectException {
 
-        String fileLocation =
-                getParameter(messageContext, "filelocation") == null ? "" : getParameter(
-                        messageContext,
-                        "filelocation").toString();
+		String fileLocation = getParameter(messageContext, "filelocation") == null ? ""
+				: getParameter(messageContext, "filelocation").toString();
 
-        String newFileLocation =
-                getParameter(messageContext, "newfilelocation") == null ? "" : getParameter(
-                        messageContext,
-                        "newfilelocation").toString();
+		String newFileLocation = getParameter(messageContext, "newfilelocation") == null ? ""
+				: getParameter(messageContext, "newfilelocation").toString();
 
-        boolean resultStatus;
-        try {
-            resultStatus = new FileUnzipUtil().unzip(fileLocation, newFileLocation, messageContext);
-        } catch (Exception e) {
-            handleException(e.getMessage(), messageContext);
-            resultStatus = false;
-        }
-        generateResults(messageContext, resultStatus);
-    }
+		boolean resultStatus;
+		try {
+			resultStatus = new FileUnzipUtil().unzip(fileLocation,
+					newFileLocation, messageContext);
+		} catch (Exception e) {
+			handleException(e.getMessage(), messageContext);
+			resultStatus = false;
+		}
+		generateResults(messageContext, resultStatus);
+	}
 
-    private void generateResults(MessageContext messageContext, boolean resultStatus) {
-        ResultPayloadCreater resultPayload = new ResultPayloadCreater();
+	private void generateResults(MessageContext messageContext,
+			boolean resultStatus) {
+		ResultPayloadCreater resultPayload = new ResultPayloadCreater();
 
-        String responses = "<unzip><success>" + resultStatus + "</success></unzip>";
+		String responses = "<unzip><success>" + resultStatus
+				+ "</success></unzip>";
 
-        try {
-            OMElement element = resultPayload.performSearchMessages(responses);
-            resultPayload.preparePayload(messageContext, element);
-        } catch (XMLStreamException e) {
-            log.error(e.getMessage());
-            handleException(e.getMessage(), messageContext);
-        } catch (IOException e) {
-            log.error(e.getMessage());
-            handleException(e.getMessage(), messageContext);
-        } catch (JSONException e) {
-            log.error(e.getMessage());
-            handleException(e.getMessage(), messageContext);
-        }
-    }
+		try {
+			OMElement element = resultPayload.performSearchMessages(responses);
+			resultPayload.preparePayload(messageContext, element);
+		} catch (XMLStreamException e) {
+			log.error(e.getMessage());
+			handleException(e.getMessage(), messageContext);
+		} catch (IOException e) {
+			log.error(e.getMessage());
+			handleException(e.getMessage(), messageContext);
+		} catch (JSONException e) {
+			log.error(e.getMessage());
+			handleException(e.getMessage(), messageContext);
+		}
+	}
 }
-
-
